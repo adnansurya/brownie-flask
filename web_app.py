@@ -21,7 +21,7 @@ def getMessageFromContract(tnx_address):
 
 
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -35,3 +35,16 @@ def index():
 def getMessage(address):    
     message_text = getMessageFromContract(address) #contract address created after deploying contract
     return f"<p> Getting Message from Address : {escape(address)} <br>The Message : {escape(message_text)} </p>"
+
+
+@app.route("/set_message", methods=['POST'])
+def setMessage():
+    res_message = '-'
+    if request.method == 'POST':
+        address = request.form['address']
+        value = request.form['value']
+        res_message = address + ' - ' + value
+    else:
+        res_message = 'error'
+
+    return res_message
