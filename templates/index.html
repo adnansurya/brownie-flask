@@ -25,15 +25,39 @@
                         <form id="get_address_form">
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="address_text">Address : </label>
-                                <input type="text" name="address" id="address_text"  class="form-control" placeholder="Created Contract Address" aria-label="Recipient's username" aria-describedby="button-addon2">
-                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Get Message!</button>
-                            </div>                            
+                                <input type="text" name="address" id="address_text" class="form-control"
+                                    placeholder="Created Contract Address" aria-label="Recipient's username"
+                                    aria-describedby="button-addon2">
+                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Get
+                                    Message!</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Set Message To Contract</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="set_value_form" method="post" action="/set_message">
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="address_text_set">Address :</label>
+                                <input type="text" name="address" id="address_text_set"  class="form-control" placeholder="Created Contract Address" aria-label="Recipient's username" aria-describedby="button-addon2">
+                            </div>  
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="value_text">Value :</label>
+                                <input type="text" name="value" id="value_text"  class="form-control" placeholder="Enter new Value" aria-label="Recipient's username" aria-describedby="button-addon2">
+                            </div>                                                     
+                            <button class="btn btn-primary" type="submit">Set Value</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -50,8 +74,8 @@
         window.location.href = "/get_message/" + address;
 
     });
+    
 
-   
 </script>
 
 </html>
