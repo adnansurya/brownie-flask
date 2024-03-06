@@ -22,6 +22,8 @@ def getMessageFromContract(tnx_address):
 
 
 from flask import Flask
+from markupsafe import escape
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -32,3 +34,8 @@ def index():
     message_text = getMessageFromContract('0x6945a73F33bB02526ed89cA5D95BA4312f0EE490')
     displayStr = "<p>" + message_text + "</p>"
     return displayStr
+
+
+@app.route("/get_message/<address>")
+def hello(address):
+    return f"Getting Message from Address : {escape(address)} !"
