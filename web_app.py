@@ -29,13 +29,10 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     #debugStr = "<p>Abi: " + str(abi) + "<br>Bytecode: " + str(bytecode) + "</p>"
-    
-    #contract address created after deploying contract
-    message_text = getMessageFromContract('0x6945a73F33bB02526ed89cA5D95BA4312f0EE490')
-    displayStr = "<p>" + message_text + "</p>"
+    displayStr = "This is index page"
     return displayStr
 
-
 @app.route("/get_message/<address>")
-def hello(address):
-    return f"Getting Message from Address : {escape(address)} !"
+def getMessage(address):    
+    message_text = getMessageFromContract(address) #contract address created after deploying contract
+    return f"<p> Getting Message from Address : {escape(address)} <br>The Message : {escape(message_text)} </p>"
