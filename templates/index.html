@@ -1,34 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brownie-Flask Debugger</title>
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
 </head>
-<body>
-    <h1>Brownie-Flask Debugger</h1>
-    <h3>Get Message From Contract</h3>    
-    
-    <form id="get_address_form">
-        <label for="address_text">Address :</label>
-        <input type="text" name="address" id="address_text">
 
-        <button type="submit">Go</button>
-    </form>
-    
+<body>
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-12">
+                <h1>Brownie-Flask Debugger</h1>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Get Message From Contract</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="get_address_form">
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="address_text">Address : </label>
+                                <input type="text" name="address" id="address_text"  class="form-control" placeholder="Created Contract Address" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Get Message!</button>
+                            </div>                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
 </body>
 
 <script src="static/js/bootstrap.bundle.min.js"></script>
 <script>
-    let form = document.getElementById("get_address_form");
+    let get_address_form = document.getElementById("get_address_form");
     let address_text = document.getElementById("address_text");
 
-    form.addEventListener("submit", (event) => {
+    get_address_form.addEventListener("submit", (event) => {
         event.preventDefault();
         let address = address_text.value;
         window.location.href = "/get_message/" + address;
-        
+
     });
+
+   
 </script>
+
 </html>
