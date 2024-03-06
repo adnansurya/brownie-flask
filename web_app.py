@@ -11,14 +11,6 @@ bytecode = MessageStorage.bytecode
 from web3 import Web3
 w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:8545'))
 
-
-#test by using one of account listed in ganache
-dummy_sender = {
-    'private_key': '2b3ce1b22a9d298aa09e03f0812f07ae53d230d82255427216dba727ed2c4961',
-    'address': '0xbd97dA4EC6746C12147Ed1DbceC60ed04E4bF45e',
-}
-
-
 #function to get message from contract
 def getMessageFromContract(tnx_address):
     msgContract = w3.eth.contract(address=tnx_address, abi=abi)
@@ -63,10 +55,12 @@ def getMessage(address):
 def setMessage():
     res_message = '-'
     if request.method == 'POST':
+        sender_address = request.form['sender_address']
+        sender_pk = request.form['sender_pk']
         address = request.form['address']
         value = request.form['value']
         res_message = address + ' - ' + value
-        setMessageToContract(address, dummy_sender['address'], dummy_sender['private_key'], value)
+        setMessageToContract(address, sender_address, sender_pk, value)
     else:
         res_message = 'error'
 
