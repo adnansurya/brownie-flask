@@ -9,12 +9,24 @@
     <h1>Brownie-Flask Debugger</h1>
     <h3>Get Message From Contract</h3>    
     
-    <form action="#">
-        <label for="address_label">Address :</label>
-        <input type="text" name="address" id="address_label">
+    <form id="get_address_form">
+        <label for="address_text">Address :</label>
+        <input type="text" name="address" id="address_text">
 
         <button type="submit">Go</button>
     </form>
     
 </body>
+
+<script>
+    let form = document.getElementById("get_address_form");
+    let address_text = document.getElementById("address_text");
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        let address = address_text.value;
+        window.location.href = "/get_message/" + address;
+        
+    });
+</script>
 </html>
