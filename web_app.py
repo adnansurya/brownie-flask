@@ -21,16 +21,15 @@ def getMessageFromContract(tnx_address):
 
 
 
-from flask import Flask
+from flask import Flask, render_template
 from markupsafe import escape
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    #debugStr = "<p>Abi: " + str(abi) + "<br>Bytecode: " + str(bytecode) + "</p>"
-    displayStr = "This is index page"
-    return displayStr
+    #debugStr = "<p>Abi: " + str(abi) + "<br>Bytecode: " + str(bytecode) + "</p>"    
+    return render_template('index.html')
 
 @app.route("/get_message/<address>")
 def getMessage(address):    
