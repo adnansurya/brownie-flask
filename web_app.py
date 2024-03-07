@@ -35,7 +35,7 @@ def setMessageToContract(tnx_address, sender_address, sender_pk, value):
 
 
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -47,9 +47,19 @@ def index():
 
 @app.route("/get_message/<address>")
 def getMessage(address):    
-    message_text = getMessageFromContract(address) #contract address created after deploying contract
-    return f"<p> Getting Message from Address : {escape(address)} <br>The Message : {escape(message_text)} </p>"
-
+    
+    message_text = ''
+    status = 'empty'
+    try:
+        status = 'ok'
+        message_text = getMessageFromContract(address) #contract address created after deploying contract 
+    except:
+        status = 'error'
+    # return f"<p> Getting Message from Address : {escape(address)} <br>The Message : {escape(message_text)} </p>"
+    return jsonify(
+        message_text = message_text,
+        status = status
+    )
 
 @app.route("/set_message", methods=['POST'])
 def setMessage():
