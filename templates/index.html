@@ -15,7 +15,8 @@
                 <h1>Brownie-Flask Debugger</h1>
             </div>
         </div>
-        <div class="row mb-4">
+        
+        <!-- <div class="row mb-4">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
@@ -31,6 +32,49 @@
                                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Get
                                     Message!</button>
                             </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Get Message From Transaction Hash</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="get_tx_hash_form">
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="tx_hash">Transaction Hash : </label>
+                                <input type="text" name="tx_hash" id="tx_hash" class="form-control"
+                                    placeholder="Created Transaction Hash (Tx Hash)" aria-label="Recipient's username"
+                                    aria-describedby="button-addon2">
+                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Get
+                                    Message!</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Get Message From Contract</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="get_value_form" method="post" action="/get_message_hash">                                                        
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="sender_address">Address :</label>
+                                <input type="text" name="sender_address" id="sender_address"  class="form-control" placeholder="Sender's Account Address" aria-label="Recipient's username" aria-describedby="button-addon2">
+                            </div>                                                                                
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="tx_hash_get">Tx hash :</label>
+                                <input type="text" name="tx_hash" id="tx_hash_get"  class="form-control" placeholder="Created Contract Address" aria-label="Recipient's username" aria-describedby="button-addon2">
+                            </div>                                                                                 
+                            <button class="btn btn-primary" type="submit">Get Message</button>
                         </form>
                     </div>
                 </div>
@@ -75,18 +119,5 @@
 </body>
 
 <script src="static/js/bootstrap.bundle.min.js"></script>
-<script>
-    let get_address_form = document.getElementById("get_address_form");
-    let address_text = document.getElementById("address_text");
-
-    get_address_form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        let address = address_text.value;
-        window.location.href = "/get_message/" + address;
-
-    });
-    
-
-</script>
 
 </html>
