@@ -14,7 +14,6 @@ res_bytecode = RestrictedText.bytecode
 from web3 import Web3
 w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:8545'))
 
-import global_variables as gv
 
 
 def setMessageCtx(ctx_addr, sndr_addr, sndr_pk, value):
