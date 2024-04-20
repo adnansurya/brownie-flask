@@ -1,3 +1,5 @@
+#script yang menengahi python dan java -web 3
+#berisi server lokal (flash), dan blockchain (brownie)
 from brownie import *
 p = project.load('brownie-dir')
 p.load_config()
@@ -14,6 +16,16 @@ res_bytecode = RestrictedText.bytecode
 from web3 import Web3
 w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:8545'))
 
+from datetime import datetime
+
+file_name = datetime.now().strftime("%m%d%Y_%H%M%S")
+print("nama file: " + file_name)
+
+def writeGanacheLog(fileName, row):    
+    # open the file in the write mode
+    with open('output_log/'+ fileName + '.csv', 'a') as f:       
+        f.write(row)
+
 
 def setMessageCtx(ctx_addr, sndr_addr, sndr_pk, value):
     contract = w3.eth.contract(address=ctx_addr, abi=res_abi)
@@ -28,6 +40,11 @@ def setMessageCtx(ctx_addr, sndr_addr, sndr_pk, value):
     tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
     print(tx_receipt)
+    
+    now = datetime.now() # current date and time
+    date_time = now.strftime("%m/%d/%Y, %H:%M:%S")    
+    log_row = date_time + ";" + tx_receipt['transactionHash'].hex()  + ";" +  str(tx_receipt['blockNumber'])  + ";" +  str(tx_receipt['cumulativeGasUsed']) + ";" +  str(tx_receipt['gasUsed'])  + ";" +  tx_receipt['from']  + ";" +  tx_receipt['to']  + ";" +  str(tx_receipt['effectiveGasPrice']) + ";\n"
+    writeGanacheLog(file_name,log_row)
     
     return tx_receipt['transactionHash'].hex()
 
@@ -79,9 +96,15 @@ def grantAccessToAccount(ctx, owner, acc, allow):
 
     return res_message
 
+#1-#36 blockchain (web3)
+
 from flask import Flask, render_template, request, jsonify
 from markupsafe import escape
 import json
+
+log_header = 'timestamp ;txHash ;blockNumber ;cumulativeGasUsed ;gasUsed ;from ;to ;effectiveGasPrice; \n' 
+with open('output_log/'+ file_name+ '.csv', 'w') as f:
+    f.write(log_header)
 
 app = Flask(__name__)
 
