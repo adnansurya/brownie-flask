@@ -6,9 +6,6 @@ p.load_config()
 
 from brownie.project.BrownieDirProject import *
 
-abi = MessageStorage.abi
-bytecode = MessageStorage.bytecode
-
 res_abi = RestrictedText.abi
 res_bytecode = RestrictedText.bytecode
 
