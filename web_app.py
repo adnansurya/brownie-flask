@@ -13,27 +13,6 @@ res_bytecode = RestrictedText.bytecode
 from web3 import Web3
 w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:8545'))
 
-def getTextByHash():
-        
-    target_hash = '0x994f0195680cabad917527250b9b68b8d2a02653d03eca29d55ecdeb07604d92'
-    tx = w3.eth.get_transaction(target_hash)
-    contract_address = tx['to']  
-    contract = w3.eth.contract(address=contract_address, abi=res_abi)
-
-    tx_receipt = w3.eth.get_transaction_receipt(target_hash)
-               
-    if tx_receipt.status == 1:
-    # Proses log acara dari transaksi tersebut
-        for log in tx_receipt.logs:
-            # Periksa apakah log acara terkait dengan event TextChanged
-            if log.address == contract_address:
-                # Dekode data dari log acara
-                decoded_log = contract.events.TextChanged().process_log(log)
-                print(decoded_log['args']['changer'])
-                print(decoded_log['args']['newText'])     
-
-getTextByHash()
-
 
 from datetime import datetime
 
