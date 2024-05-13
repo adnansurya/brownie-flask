@@ -72,7 +72,18 @@ def readMessageFromHash(tx_hash, sndr_addr):
     tx = w3.eth.get_transaction(tx_hash)
     ctx_address = tx['to']    
     contract = w3.eth.contract(address=ctx_address, abi=res_abi)
-    restricted_text = contract.functions.readText().call({'from' : sndr_addr})
+
+    tx_receipt = w3.eth.get_transaction_receipt(tx_hash)
+    restricted_text = '-'
+               
+    if tx_receipt.status == 1:
+    # Proses log acara dari transaksi tersebut
+        for log in tx_receipt.logs:
+            # Periksa apakah log acara terkait dengan event TextChanged
+            if log.address == ctx_address:
+                # Dekode data dari log acara
+                decoded_log = contract.events.TextChanged().process_log(log)
+                restricted_text = decoded_log['args']['newText']                                
     print(restricted_text)
     return restricted_text
 
