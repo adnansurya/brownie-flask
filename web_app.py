@@ -47,7 +47,7 @@ def setMessageCtx(ctx_addr, sndr_addr, sndr_pk, value):
     return tx_receipt['transactionHash'].hex()
 
 
-def readMessageFromHash(tx_hash, sndr_addr):    
+def readMessageFromHash(tx_hash, sndr_addr, rcvr_addr):       
     tx = w3.eth.get_transaction(tx_hash)
     ctx_address = tx['to']    
     contract = w3.eth.contract(address=ctx_address, abi=res_abi)
@@ -59,10 +59,23 @@ def readMessageFromHash(tx_hash, sndr_addr):
     # Proses log acara dari transaksi tersebut
         for log in tx_receipt.logs:
             # Periksa apakah log acara terkait dengan event TextChanged
-            if log.address == ctx_address:
+            if log.address == ctx_address:                
                 # Dekode data dari log acara
-                decoded_log = contract.events.TextChanged().process_log(log)
-                restricted_text = decoded_log['args']['newText']                                
+                decoded_log = contract.events.TextChanged().process_log(log)                
+                decoded_text = decoded_log['args']['newText']    
+                changer = decoded_log['args']['changer']
+                if changer == sndr_addr:
+                    pack_msg = json.loads(decoded_text)
+                    to_addr = pack_msg['to_address']
+                    print(to_addr)
+                    if to_addr == rcvr_addr:
+                        restricted_text = pack_msg['value']
+                    else:
+                        restricted_text = "ERROR : Wrong Receiver's Address"
+                                    
+                else:
+                    restricted_text = "ERROR : Wrong Sender's Address"
+                                           
     print(restricted_text)
     return restricted_text
 
@@ -155,9 +168,10 @@ def getMessageHash():
     status = 'empty'    
     if request.method == 'POST':     
         tx_hash = request.form['tx_hash']
-        sender_address = request.form['sender_address']                
+        sender_address = request.form['sender_address']      
+        receiver_address = request.form['receiver_address']            
         try:                        
-            message_text = readMessageFromHash(tx_hash, sender_address) #contract address created after deploying contract            
+            message_text = readMessageFromHash(tx_hash, sender_address, receiver_address) #contract address created after deploying contract            
         except:
             message_text = 'error'
         # return f"<p> Getting Message from Address : {escape(address)} <br>The Message : {escape(message_text)} </p>"

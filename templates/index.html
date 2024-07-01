@@ -26,9 +26,13 @@
                     <div class="card-body">
                         <form id="get_value_form" method="post" action="/get_message_hash">                                                        
                             <div class="input-group mb-3">
-                                <label class="input-group-text" for="sender_address">Address :</label>
+                                <label class="input-group-text" for="sender_address">Sender Address :</label>
                                 <input type="text" name="sender_address" id="sender_address"  class="form-control" placeholder="Sender's Account Address" aria-label="Recipient's username" aria-describedby="button-addon2">
-                            </div>                                                                                
+                            </div>   
+                            <div class="input-group mb-3">
+                                <label class="input-group-text" for="receiver_address">Receiver Address :</label>
+                                <input type="text" name="receiver_address" id="receiver_address"  class="form-control" placeholder="Receiver's Account Address" aria-label="Recipient's username" aria-describedby="button-addon2">
+                            </div>                                                                              
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="tx_hash_get">Tx hash :</label>
                                 <input type="text" name="tx_hash" id="tx_hash_get"  class="form-control" placeholder="Created Transaction Hash" aria-label="Recipient's username" aria-describedby="button-addon2">
