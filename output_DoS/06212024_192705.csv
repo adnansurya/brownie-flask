@@ -1,0 +1,2 @@
+timestamp;txHash;blockNumber;cumulativeGasUsed;gasUsed;from;to;effectiveGasPrice
+06/21/2024, 19:27:05;NoTxHash;NoBlock;NoCumulativeGasUsed;NoGasUsed;0x1b8C96Cc103ab3645844a44ca3F56461e416a244;0x59fA51F266F909232757Fdf829a4948d3efe8459;NoEffectiveGasPrice
