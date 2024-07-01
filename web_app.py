@@ -26,6 +26,7 @@ def writeGanacheLog(fileName, row):
 
 
 def setMessageCtx(ctx_addr, sndr_addr, sndr_pk, value):
+    to_addr = json.loads(value)['to_address']
     contract = w3.eth.contract(address=ctx_addr, abi=res_abi)
     tx = contract.functions.writeText(value).build_transaction({
         'from' : sndr_addr,
@@ -41,7 +42,7 @@ def setMessageCtx(ctx_addr, sndr_addr, sndr_pk, value):
     
     now = datetime.now() # current date and time
     date_time = now.strftime("%m/%d/%Y, %H:%M:%S")    
-    log_row = date_time + ";" + tx_receipt['transactionHash'].hex()  + ";" +  str(tx_receipt['blockNumber'])  + ";" +  str(tx_receipt['cumulativeGasUsed']) + ";" +  str(tx_receipt['gasUsed'])  + ";" +  tx_receipt['from']  + ";" +  tx_receipt['to']  + ";" +  str(tx_receipt['effectiveGasPrice']) + ";\n"
+    log_row = date_time + ";" + tx_receipt['transactionHash'].hex()  + ";" +  str(tx_receipt['blockNumber'])  + ";" +  str(tx_receipt['cumulativeGasUsed']) + ";" +  str(tx_receipt['gasUsed'])  + ";" +  tx_receipt['from']  + ";" +  tx_receipt['to']  + ";" +  str(tx_receipt['effectiveGasPrice']) + ";" + to_addr + ";\n"
     writeGanacheLog(file_name,log_row)
     
     return tx_receipt['transactionHash'].hex()
@@ -124,7 +125,7 @@ from flask import Flask, render_template, request, jsonify
 from markupsafe import escape
 import json
 
-log_header = 'timestamp ;txHash ;blockNumber ;cumulativeGasUsed ;gasUsed ;from ;to ;effectiveGasPrice; \n' 
+log_header = 'timestamp ;txHash ;blockNumber ;cumulativeGasUsed ;gasUsed ;from ;to ;effectiveGasPrice; toAddr; \n' 
 with open('output_log/'+ file_name+ '.csv', 'w') as f:
     f.write(log_header)
 
