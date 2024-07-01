@@ -127,11 +127,18 @@ def setMessage():
     res_message = '-'
     # print(request.method)
     if request.method == 'POST':
+        receiver_address = request.form['receiver_address']
         sender_address = request.form['sender_address']
         sender_pk = request.form['sender_pk']
         address = request.form['address']
         value = request.form['value']
-        res_message = setMessageCtx(address, sender_address, sender_pk, value)
+        json_msg = {
+            "value" : value,
+            "to_address" : receiver_address
+        }
+        packaged_msg = json.dumps(json_msg)
+        print(packaged_msg)
+        res_message = setMessageCtx(address, sender_address, sender_pk, packaged_msg)
         print(res_message)
     else:
         res_message = 'error'
