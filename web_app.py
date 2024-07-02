@@ -19,6 +19,17 @@ from datetime import datetime
 file_name = datetime.now().strftime("%m%d%Y_%H%M%S")
 print("nama file: " + file_name)
 
+
+def accountIsIdentified(acc_addr):    
+    isIdentified = False
+    list_acc = w3.eth.accounts
+    for acc in list_acc:
+        if acc == acc_addr:
+            isIdentified = True
+            break
+    
+    return isIdentified
+
 def writeGanacheLog(fileName, row):    
     # open the file in the write mode
     with open('output_log/'+ fileName + '.csv', 'a') as f:       
@@ -91,8 +102,7 @@ def grantAccessToAccount(ctx, owner, acc, allow):
     allowing = False
    
     if int(allow) == 1:
-        allowing = True
-        
+        allowing = True        
 
     contract = w3.eth.contract(address=ctx, abi=res_abi)
     tx_hash = contract.functions.grantAccess(acc, allowing).transact({
@@ -165,6 +175,7 @@ from flask import Flask, render_template, request, jsonify
 from markupsafe import escape
 import json
 
+
 log_header = 'timestamp ;txHash ;blockNumber ;cumulativeGasUsed ;gasUsed ;from ;to ;effectiveGasPrice; toAddr; \n' 
 with open('output_log/'+ file_name+ '.csv', 'w') as f:
     f.write(log_header)
@@ -180,20 +191,25 @@ def index():
 def setMessage():
     res_message = '-'
     # print(request.method)
-    if request.method == 'POST':
+    
+    if request.method == 'POST':                        
+        sender_address = request.form['sender_address']          
+        value = request.form['value']             
         receiver_address = request.form['receiver_address']
-        sender_address = request.form['sender_address']
         sender_pk = request.form['sender_pk']
-        address = request.form['address']
-        value = request.form['value']
-        json_msg = {
-            "value" : value,
-            "to_address" : receiver_address
-        }
-        packaged_msg = json.dumps(json_msg)
-        print(packaged_msg)
-        res_message = setMessageCtx(address, sender_address, sender_pk, packaged_msg)
-        print(res_message)
+        address = request.form['address']        
+              
+        if accountIsIdentified(sender_address): 
+            json_msg = {
+                "value" : value,
+                "to_address" : receiver_address
+            }
+            packaged_msg = json.dumps(json_msg)
+            print(packaged_msg)
+            res_message = setMessageCtx(address, sender_address, sender_pk, packaged_msg)
+            print(res_message)
+        else:
+            res_message = 'Unidentified Account'
     else:
         res_message = 'error'
 
@@ -210,13 +226,15 @@ def getMessageHash():
     if request.method == 'POST':     
         tx_hash = request.form['tx_hash']
         sender_address = request.form['sender_address']      
-        receiver_address = request.form['receiver_address']            
-        try:                        
-            message_text = readMessageFromHash(tx_hash, sender_address, receiver_address) #contract address created after deploying contract            
-        except:
-            message_text = 'error'
+        receiver_address = request.form['receiver_address'] 
+        if accountIsIdentified(sender_address):                       
+            try:                        
+                message_text = readMessageFromHash(tx_hash, sender_address, receiver_address) #contract address created after deploying contract            
+            except:
+                message_text = 'error'
         # return f"<p> Getting Message from Address : {escape(address)} <br>The Message : {escape(message_text)} </p>"
-   
+        else:
+            message_text = 'Unidentified Account'
     else:
         message_text = 'wrong method'
 
@@ -302,3 +320,13 @@ def getMessageHashOld():
     return jsonify(
         message_text = message_text
     )
+    
+@app.route("/tes_post", methods=['POST'])
+def testPost():
+    if request.method == 'POST': 
+        sender_address = request.form['sender_address']
+        # value = request.form['value']
+        return(sender_address )
+    else:
+        return 'ERROR'
+    
