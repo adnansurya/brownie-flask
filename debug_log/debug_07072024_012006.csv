@@ -1,0 +1,4 @@
+timestamp ;function; message; description;
+07/07/2024, 01:20:44;accountIsIdentified;-;HTTPConnectionPool(host='127.0.0.1', port=8545): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001C9F0F7A7E0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'));
+07/07/2024, 01:20:44;get_message_hash;Unidentified Account;ImmutableMultiDict([('sender_address', '0x9fcF6fa3f16c4570B5F68EAA576718d18725fCB2'), ('receiver_address', '0xef31eCf71605E32C54EC25BF31d08eF240ae2e31'), ('tx_hash', '0xfbfeeba83e9bbad59e9998abf394d557ae140af17c27868e1d8ef503fe57792c')]);
+07/07/2024, 01:22:31;setMessageCtx;;('Address has an invalid EIP-55 checksum. After looking up the address from the original source, try again.', '0xE20fEeB180423eEE0ffC2d4C0C48E9C188d60Cad');
