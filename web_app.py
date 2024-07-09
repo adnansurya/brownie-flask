@@ -29,10 +29,10 @@ def writeGanacheLog(fileName, row):
         f.write(row)
         
 
-def writeDebugLog(fileName, func, msg, desc): 
+def writeDebugLog(fileName, acc, cat, stat, func, msg, desc): 
     now = datetime.now() # current date and time
     date_time = now.strftime("%m/%d/%Y, %H:%M:%S")  
-    debug_row = str(date_time) + ';'+ func +';'+ msg +';'+ str(desc) + ';\n'    
+    debug_row = str(date_time) + ';'+ acc +';'+ cat +';'+ stat +';'+ func +';'+ msg +';'+ str(desc) + ';\n'    
     # open the file in the write mode
     with open('debug_log/'+ fileName + '.csv', 'a') as f:       
         f.write(debug_row)
@@ -49,7 +49,7 @@ def accountIsIdentified(acc_addr):
                 break
     except Exception as e: 
         print(f"An error occurred: {e}")
-        writeDebugLog(debug_filename, 'accountIsIdentified', '-' , e)        
+        writeDebugLog(debug_filename, acc_addr, 'Unidentified', 'Failed'  ,'accountIsIdentified', '-' , e)        
     
     return isIdentified
 
@@ -72,12 +72,18 @@ def setMessageCtx(ctx_addr, sndr_addr, sndr_pk, value):
         now = datetime.now() # current date and time
         date_time = now.strftime("%m/%d/%Y, %H:%M:%S")    
         log_row = date_time + ";" + tx_receipt['transactionHash'].hex()  + ";" +  str(tx_receipt['blockNumber'])  + ";" +  str(tx_receipt['cumulativeGasUsed']) + ";" +  str(tx_receipt['gasUsed'])  + ";" +  tx_receipt['from']  + ";" +  tx_receipt['to']  + ";" +  str(tx_receipt['effectiveGasPrice']) + ";" + to_addr + ";\n"
-        writeGanacheLog(file_name,log_row)
+        writeGanacheLog(file_name,log_row)        
         hashResult = tx_receipt['transactionHash'].hex()
+        writeDebugLog(debug_filename, sndr_addr, 'Authorized' , 'Success', 'setMessageCtx', hashResult , '') 
                     
     except Exception as e:
         print(f"An error occurred: {e}")
-        writeDebugLog(debug_filename, 'setMessageCtx', hashResult , e)        
+        account_category = '-'
+        if str(e).find('do not have permission'):
+            account_category = 'Unauthorized'
+        else:
+            account_category = 'Unidentified'
+        writeDebugLog(debug_filename, sndr_addr, account_category , 'Failed', 'setMessageCtx', hashResult , e)        
 
     return hashResult
    
@@ -108,17 +114,18 @@ def readMessageFromHash(tx_hash, sndr_addr, rcvr_addr):
                         print(to_addr)
                         if to_addr == rcvr_addr:
                             restricted_text = pack_msg['value']
+                            writeDebugLog(debug_filename, sndr_addr, 'Authorized' , 'Success', 'readMessageFromHash' , restricted_text , '')
                         else:
                             restricted_text = "Wrong Receiver's Address" 
-                            writeDebugLog(debug_filename, 'readMessageFromHash', restricted_text , '-')                                   
+                            writeDebugLog(debug_filename, sndr_addr, 'Unauthorized' , 'Failed', 'readMessageFromHash', restricted_text , '-')                                   
                     else:
                         restricted_text = "Wrong Sender's Address"
-                        writeDebugLog(debug_filename, 'readMessageFromHash', restricted_text , '-')     
+                        writeDebugLog(debug_filename, sndr_addr, 'Unauthorized' , 'Failed', 'readMessageFromHash', restricted_text , '-')    
                                             
         print(restricted_text)
     except Exception as e:
         print(f"An error occurred: {e}")
-        writeDebugLog(debug_filename, 'readMessageFromHash', restricted_text , e)  
+        writeDebugLog(debug_filename, sndr_addr, 'Unauthorized' , 'Failed', 'readMessageFromHash', restricted_text , '-')   
         
     return restricted_text
 
@@ -212,7 +219,7 @@ log_header = 'timestamp ;txHash ;blockNumber ;cumulativeGasUsed ;gasUsed ;from ;
 with open('output_log/'+ file_name+ '.csv', 'w') as f:
     f.write(log_header)
     
-debug_header = 'timestamp ;function; message; description;\n' 
+debug_header = 'timestamp; account; category; status; function; message; description;\n' 
 with open('debug_log/'+ debug_filename+ '.csv', 'w') as f:
     f.write(debug_header)
 
@@ -245,11 +252,11 @@ def setMessage():
             res_message = setMessageCtx(address, sender_address, sender_pk, packaged_msg)
             print(res_message)
         else:
-            res_message = 'Unidentified Account'
-            writeDebugLog(debug_filename, 'set_message', res_message, str(request.form))            
+            res_message = 'Unidentified Account'            
+            writeDebugLog(debug_filename, sender_address, 'Unidentified' , 'Failed', 'set_message', res_message, str(request.form))            
     else:
         res_message = 'Wrong Request Method'
-        writeDebugLog(debug_filename, 'set_message', res_message, str(request.form))
+        writeDebugLog(debug_filename, sender_address, 'Unidentified' , 'Failed', 'set_message', res_message, str(request.form))
         
 
     return jsonify(
@@ -271,14 +278,14 @@ def getMessageHash():
                 message_text = readMessageFromHash(tx_hash, sender_address, receiver_address) #contract address created after deploying contract            
             except Exception as e:
                 message_text = 'Error Reading Message From Hash'
-                writeDebugLog(debug_filename, 'get_message_hash', message_text, e)
+                writeDebugLog(debug_filename,  sender_address, 'Unauthorized' , 'Failed', 'get_message_hash', message_text, e)
         # return f"<p> Getting Message from Address : {escape(address)} <br>The Message : {escape(message_text)} </p>"
         else:
             message_text = 'Unidentified Account'
-            writeDebugLog(debug_filename, 'get_message_hash', message_text, str(request.form))
+            writeDebugLog(debug_filename,  sender_address, 'Unidentified' , 'Failed', 'get_message_hash', message_text, str(request.form))
     else:
         message_text = 'Wrong Request Method'
-        writeDebugLog(debug_filename, 'get_message_hash', message_text, str(request.form))
+        writeDebugLog(debug_filename, sender_address, 'Unidentified' , 'Failed', 'get_message_hash', message_text, str(request.form))
 
     return jsonify(
         message_text = message_text
