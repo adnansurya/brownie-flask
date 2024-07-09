@@ -8,6 +8,8 @@ getter_url = 'http://127.0.0.1:5000/get_message_hash'
 
 headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
+contract_addr = '0xE20fEeB180423eEE0ffC2d4C0C48E9C188d60Cac'
+
 
 def start_sybil_attack(attack_limit):
     attack_count = 0
@@ -21,24 +23,26 @@ def start_sybil_attack(attack_limit):
         setter_address = random_acc.generate_sender_address()
         print(setter_address)
         
+        getter_address = random_acc.generate_sender_address()
+        print(getter_address)
+        
         datatest = {
-            "sender_address":  setter_address, 
+            "sender_address":  setter_address['address'], 
             "value": "Sybil Write ATTACK!", 
-            "receiver_address" : setter_address, 
-            "sender_pk" : setter_address,
-            "address" :  setter_address
+            "receiver_address" : getter_address['address'], 
+            "sender_pk" : setter_address['private_key'],
+            "address" :  contract_addr
         }
         
         response = requests.post(setter_url, data=datatest, verify=False, headers=headers)
         print(response.text)
         
-        getter_address = random_acc.generate_sender_address()
-        print(getter_address)
+     
         
         datatest = {
-            "sender_address":  getter_address, 
+            "sender_address":  setter_address['address'], 
             "value": "Sybil Read ATTACK!", 
-            "receiver_address" : getter_address, 
+            "receiver_address" : getter_address['address'], 
             "tx_hash" : "0x26d738d596424715b7a17524228fa410386aac98b2dd14c8278c9dfed7a72e0b"
         }
         

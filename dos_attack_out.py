@@ -6,6 +6,7 @@ print(test_address)
 url = 'http://127.0.0.1:5000/set_message'  # Replace with your desired URL
 # data = {'sender_address': test_address, 'value': 'DOS ATTACK!'}  # Your data to send
 
+contract_addr = '0xE20fEeB180423eEE0ffC2d4C0C48E9C188d60Cac'
 
 def start_dos_attack(attack_limit):
 
@@ -16,11 +17,11 @@ def start_dos_attack(attack_limit):
             break
         
         datatest = {
-            "sender_address":  test_address, 
+            "sender_address":  test_address['address'], 
             "value": "DOS ATTACK!", 
-            "receiver_address" : test_address, 
-            "sender_pk" : test_address,
-            "address" :  test_address
+            "receiver_address" : test_address['address'], 
+            "sender_pk" : test_address['private_key'],
+            "address" :  contract_addr
         }
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         response = requests.post(url, data=datatest, verify=False, headers=headers)
